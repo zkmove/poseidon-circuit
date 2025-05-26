@@ -743,24 +743,24 @@ where
             },
         )?;
 
-        #[cfg(not(feature = "parallel_syn"))]
+        //#[cfg(not(feature = "parallel_syn"))]
         let is_parallel_assignment = false;
 
-        // if feature flag "parallel_syn" is enabled,
-        // `parallel` assignment is turned on by default
-        // we can turn it off by set the environment variable
-        // `CIRCUIT_ASSIGNMENT_TYPE=serial`
-        #[cfg(feature = "parallel_syn")]
-        let is_parallel_assignment = {
-            let assignment_type = std::env::var("CIRCUIT_ASSIGNMENT_TYPE")
-                .ok()
-                .unwrap_or_default();
-            match assignment_type.as_str() {
-                "serial" => false,
-                "parallel" => true,
-                &_ => true,
-            }
-        };
+        // // if feature flag "parallel_syn" is enabled,
+        // // `parallel` assignment is turned on by default
+        // // we can turn it off by set the environment variable
+        // // `CIRCUIT_ASSIGNMENT_TYPE=serial`
+        // #[cfg(feature = "parallel_syn")]
+        // let is_parallel_assignment = {
+        //     let assignment_type = std::env::var("CIRCUIT_ASSIGNMENT_TYPE")
+        //         .ok()
+        //         .unwrap_or_default();
+        //     match assignment_type.as_str() {
+        //         "serial" => false,
+        //         "parallel" => true,
+        //         &_ => true,
+        //     }
+        // };
 
         let (states_in, states_out) = if is_parallel_assignment == false {
             layouter.assign_region(

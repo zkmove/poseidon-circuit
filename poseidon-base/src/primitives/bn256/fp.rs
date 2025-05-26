@@ -9,7 +9,7 @@
 
 use halo2curves::{
     bn256::Fr as Fp,
-    group::ff::{Field, PrimeField},
+    group::ff::{PrimeField},
 };
 use lazy_static::lazy_static;
 
