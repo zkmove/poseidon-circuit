@@ -13,7 +13,7 @@ rand_xorshift.workspace = true
 rand.workspace = true
 
 [features]
-default = ["halo2_proofs/parallel_syn", "short"]
+default = ["short"]
 # Use an implementation using fewer rows (8) per permutation.
 short = ["poseidon-base/short"]
 # printout the layout of circuits for demo and some unittests
@@ -21,7 +21,7 @@ print_layout = ["halo2_proofs/dev-graph"]
 legacy = []
 # "halo2_proofs/parallel_syn" is turned on by default for compilation
 # "parallel_syn" can be turned on/off via `zkevm-circuits`
-parallel_syn = ["halo2_proofs/parallel_syn"]
+#parallel_syn = ["halo2_proofs/parallel_syn"]
 
 [dev-dependencies]
 bencher.workspace = true
