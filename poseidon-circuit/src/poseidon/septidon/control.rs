@@ -3,7 +3,9 @@ use super::util::query;
 
 use ff::PrimeField;
 use halo2_proofs::circuit::{Region, Value};
-use halo2_proofs::plonk::{Column, ConstraintSystem, Error, Expression, Fixed, VirtualCells};
+use halo2_proofs::plonk::{
+    Column, ConstraintSystem, ErrorFront as Error, Expression, Fixed, VirtualCells,
+};
 use halo2_proofs::poly::Rotation;
 
 #[derive(Clone, Debug)]

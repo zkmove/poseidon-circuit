@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use ff::{Field, FromUniformBytes};
 use halo2_proofs::{
     circuit::{AssignedCell, Chip, Layouter},
-    plonk::{ConstraintSystem, Error},
+    plonk::{ConstraintSystem, ErrorFront as Error},
 };
 
 use poseidon_base::primitives::{

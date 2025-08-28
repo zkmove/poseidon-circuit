@@ -2,7 +2,7 @@ use super::params;
 use ff::PrimeField;
 use halo2_proofs::circuit::{Region, Value};
 use halo2_proofs::plonk::{
-    Advice, Column, ConstraintSystem, Error, Expression, Fixed, VirtualCells,
+    Advice, Column, ConstraintSystem, ErrorFront as Error, Expression, Fixed, VirtualCells,
 };
 use halo2_proofs::poly::Rotation;
 

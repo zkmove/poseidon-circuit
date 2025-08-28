@@ -1,6 +1,6 @@
 use halo2_proofs::circuit::{Region, Value};
 //use halo2_proofs::halo2curves::bn256::Fr as F;
-use halo2_proofs::plonk::{ConstraintSystem, Error};
+use halo2_proofs::plonk::{ConstraintSystem, ErrorFront as Error};
 use poseidon_base::params::{round_constant, CachedConstants};
 
 use super::control::ControlChip;

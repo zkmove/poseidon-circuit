@@ -4,7 +4,7 @@ use ff::PrimeField;
 use halo2_proofs::circuit::{Region, Value};
 use halo2_proofs::{
     circuit::{Chip, Layouter},
-    plonk::{ConstraintSystem, Error},
+    plonk::{ConstraintSystem, ErrorFront as Error},
 };
 use poseidon_base::{
     params::CachedConstants,
@@ -158,14 +158,11 @@ impl<F: CachedConstants, S: Spec<F, WIDTH, RATE>> PoseidonInstructions<F, S, WID
             })
             .collect::<Vec<_>>();
 
-        assignments.into_iter()
+        assignments
+            .into_iter()
             .map(|f| layouter.assign_region(|| "permute state", f))
             .collect::<Result<Vec<_>, _>>()
-            .map(|e|
-                e.into_iter()
-                    .flatten()
-                    .collect::<Vec<_>>()
-            )
+            .map(|e| e.into_iter().flatten().collect::<Vec<_>>())
         // layouter
         //     .assign_regions(|| "permute state", assignments)
         //     .map(|e| e.into_iter().flatten().collect::<Vec<_>>())

@@ -4,7 +4,9 @@ use std::iter;
 use ff::{FromUniformBytes, PrimeField};
 use halo2_proofs::{
     circuit::{AssignedCell, Cell, Chip, Layouter, Region, Value},
-    plonk::{Advice, Any, Column, ConstraintSystem, Error, Expression, Fixed, Selector},
+    plonk::{
+        Advice, Any, Column, ConstraintSystem, ErrorFront as Error, Expression, Fixed, Selector,
+    },
     poly::Rotation,
 };
 use poseidon_base::primitives::{Absorbing, Domain, Mds, Spec, Squeezing, State};
@@ -714,7 +716,7 @@ mod tests {
     use halo2_proofs::{
         circuit::{Layouter, SimpleFloorPlanner, Value},
         dev::MockProver,
-        plonk::{Circuit, ConstraintSystem, Error},
+        plonk::{Circuit, ConstraintSystem, ErrorFront as Error},
     };
     use poseidon_base::primitives::{
         self as poseidon,

@@ -3,8 +3,7 @@ use super::params::{mds, CachedConstants};
 use super::state::{Cell, FullState, SBox};
 use super::util::{join_values, matmul, query, split_values};
 use halo2_proofs::circuit::{Region, Value};
-//use halo2_proofs::halo2curves::bn256::Fr as F;
-use halo2_proofs::plonk::{ConstraintSystem, Error, Expression, VirtualCells};
+use halo2_proofs::plonk::{ConstraintSystem, ErrorFront as Error, Expression, VirtualCells};
 
 #[derive(Clone, Debug)]
 pub struct FullRoundChip(pub FullState);

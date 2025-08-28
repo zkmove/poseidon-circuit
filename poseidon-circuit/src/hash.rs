@@ -38,7 +38,9 @@ pub use chip_short::*;
 use crate::poseidon::{PermuteChip, PoseidonInstructions};
 use halo2_proofs::{
     circuit::{Chip, Layouter, Region, Value},
-    plonk::{Advice, Column, ConstraintSystem, Error, Expression, Selector, TableColumn},
+    plonk::{
+        Advice, Column, ConstraintSystem, ErrorFront as Error, Expression, Selector, TableColumn,
+    },
     poly::Rotation,
 };
 use std::fmt::Debug as DebugT;
@@ -856,7 +858,7 @@ where
             //let ret = layouter.assign_regions(|| "hash table", assignments)?;
             let ret = assignments
                 .into_iter()
-                .map(|f| layouter.assign_region(|| "hash table sub region", f, ))
+                .map(|f| layouter.assign_region(|| "hash table sub region", f))
                 .collect::<Result<Vec<_>, _>>()?;
             let mut states_in = vec![];
             let mut states_out = vec![];
@@ -1201,15 +1203,14 @@ mod tests {
             ..Default::default()
         });
 
-        let vk = keygen_vk(&general_params, &circuit
-        ).expect("keygen_vk shouldn't fail");
-        let pk = keygen_pk(&general_params,vk, &circuit).expect("keygen_pk shouldn't fail");
+        let vk = keygen_vk(&general_params, &circuit).expect("keygen_vk shouldn't fail");
+        let pk = keygen_pk(&general_params, vk, &circuit).expect("keygen_pk shouldn't fail");
 
         set_assignment_env_var("parallel");
         let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
         create_proof::<
             KZGCommitmentScheme<Bn256>,
-            ProverSHPLONK<'_, Bn256>,
+            ProverSHPLONK<Bn256>,
             Challenge255<G1Affine>,
             XorShiftRng,
             Blake2bWrite<Vec<u8>, G1Affine, Challenge255<G1Affine>>,
@@ -1218,7 +1219,7 @@ mod tests {
             &general_params,
             &pk,
             &[circuit],
-            &[&[]],
+            &[vec![]],
             rng,
             &mut transcript,
         )
@@ -1227,18 +1228,18 @@ mod tests {
 
         set_assignment_env_var("serial");
         let mut verifier_transcript = Blake2bRead::<_, G1Affine, Challenge255<_>>::init(&proof[..]);
-        let strategy = SingleStrategy::new(&general_params);
+        let strategy = SingleStrategy::new(&verifier_params);
         verify_proof::<
             KZGCommitmentScheme<Bn256>,
-            VerifierSHPLONK<'_, Bn256>,
+            VerifierSHPLONK<Bn256>,
             Challenge255<G1Affine>,
             Blake2bRead<&[u8], G1Affine, Challenge255<G1Affine>>,
-            SingleStrategy<'_, Bn256>,
+            SingleStrategy<Bn256>,
         >(
             &verifier_params,
             pk.get_vk(),
             strategy,
-            &[&[]],
+            &[vec![]],
             &mut verifier_transcript,
         )
         .expect("failed to verify bench circuit");

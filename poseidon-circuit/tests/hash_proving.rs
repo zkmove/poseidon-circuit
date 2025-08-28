@@ -15,7 +15,7 @@ use halo2_proofs::transcript::{
 };
 use halo2_proofs::{
     circuit::{Layouter, SimpleFloorPlanner},
-    plonk::{Circuit, ConstraintSystem, Error},
+    plonk::{Circuit, ConstraintSystem, ErrorFront as Error},
 };
 use poseidon_circuit::poseidon::Pow5Chip;
 use poseidon_circuit::{hash::*, DEFAULT_STEP};
@@ -77,7 +77,7 @@ fn hash_circuit() {
 fn vk_validity() {
     use halo2_proofs::SerdeFormat;
 
-    let params = Params::<Bn256>::unsafe_setup(8);
+    let params = Params::<Bn256>::new(8);
 
     let circuit = TestCircuit(PoseidonHashTable::default(), 3);
     let vk1 = keygen_vk(&params, &circuit).unwrap();
@@ -115,7 +115,7 @@ fn vk_validity() {
 fn proof_and_verify() {
     let k = 8;
 
-    let params = Params::<Bn256>::unsafe_setup(k);
+    let params = Params::<Bn256>::new(k);
     let os_rng = ChaCha8Rng::from_seed([101u8; 32]);
     let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
 
@@ -148,7 +148,7 @@ fn proof_and_verify() {
         &params,
         &pk,
         &[circuit],
-        &[&[]],
+        &[vec![]],
         os_rng,
         &mut transcript,
     )
@@ -157,16 +157,16 @@ fn proof_and_verify() {
     let proof_script = transcript.finalize();
     let mut transcript = Blake2bRead::<_, _, Challenge255<_>>::init(&proof_script[..]);
     let verifier_params: ParamsVerifier<Bn256> = params.verifier_params().clone();
-    let strategy = SingleStrategy::new(&params);
+    let strategy = SingleStrategy::new(&verifier_params);
     let circuit = TestCircuit(PoseidonHashTable::default(), 4);
     let vk = keygen_vk(&params, &circuit).unwrap();
 
     assert!(
-        verify_proof::<KZGCommitmentScheme<Bn256>, VerifierSHPLONK<'_, Bn256>, _, _, _>(
+        verify_proof::<KZGCommitmentScheme<Bn256>, VerifierSHPLONK<Bn256>, _, _, _>(
             &verifier_params,
             &vk,
             strategy,
-            &[&[]],
+            &[vec![]],
             &mut transcript
         )
         .is_ok()

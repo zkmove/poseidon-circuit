@@ -3,7 +3,9 @@ use super::params::{mds, round_constant, CachedConstants};
 use super::state::Cell;
 use super::util::{join_values, matmul, split_values};
 use halo2_proofs::circuit::{Region, Value};
-use halo2_proofs::plonk::{Advice, Column, ConstraintSystem, Constraints, Error, Expression};
+use halo2_proofs::plonk::{
+    Advice, Column, ConstraintSystem, Constraints, ErrorFront as Error, Expression,
+};
 
 #[derive(Clone, Debug)]
 pub struct TransitionRoundChip {
